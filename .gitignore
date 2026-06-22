@@ -1,0 +1,8 @@
+# Ignore the raw data folder
+data/
+
+# Ignore the compiled output datasets
+output/
+
+# Ignore system files (like Mac's hidden desktop files)
+.DS_Store
