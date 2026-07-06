@@ -31,6 +31,10 @@ listings_with_rates = listing_df.merge(mortgage_monthly, on='year_month', how='l
 print(sold_with_rates['rate_30yr_fixed'].isnull().sum())
 print(listings_with_rates['rate_30yr_fixed'].isnull().sum())
 
+# Write to CSV files
+sold_with_rates.to_csv('output/sold.csv', index=False)
+listings_with_rates.to_csv('output/listing.csv', index=False)
+
 # Preview
 print(
 sold_with_rates[
