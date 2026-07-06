@@ -29,22 +29,22 @@ high_missing_sold = missing_val_analysis(sold_df, "Sold Dataset", 90)
 # consider dropping columns with more than 50% missing values unless they are core fields or seem like they could be important
 
 key_fields = ['ClosePrice', "ListPrice", "OriginalListPrice", "LivingArea", "LotSizeAcres", "BedroomsTotal", "BathroomsTotalInteger", "DaysOnMarket", "YearBuilt"]
-# for col in key_fields:
-#     plt.hist(sold_df[col].dropna(), bins = 50, color='steelblue')
-#     plt.title(f"Sold dataset {col} Histogram")
-#     plt.show()
+for col in key_fields:
+    plt.hist(sold_df[col].dropna(), bins = 50, color='steelblue')
+    plt.title(f"Sold dataset {col} Histogram")
+    plt.show()
 
-#     plt.boxplot(sold_df[col].dropna())
-#     plt.title(f"Sold dataset {col} Boxplot")
-#     plt.show()
+    plt.boxplot(sold_df[col].dropna())
+    plt.title(f"Sold dataset {col} Boxplot")
+    plt.show()
 
-#     plt.hist(listing_df[col].dropna(), bins = 50, color='steelblue')
-#     plt.title(f"Listings dataset {col} Histogram")
-#     plt.show()
+    plt.hist(listing_df[col].dropna(), bins = 50, color='steelblue')
+    plt.title(f"Listings dataset {col} Histogram")
+    plt.show()
 
-#     plt.boxplot(listing_df[col].dropna())
-#     plt.title(f"Listings dataset {col} Boxplot")
-#     plt.show()
+    plt.boxplot(listing_df[col].dropna())
+    plt.title(f"Listings dataset {col} Boxplot")
+    plt.show()
 
 custom_percentiles = [0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 0.90, 0.95, 0.99]
 print(f" Sold dataset key fields percentile summary {sold_df[key_fields].describe(percentiles=custom_percentiles).T.round(2)}")
@@ -57,9 +57,11 @@ target_fields = ['ClosePrice', 'LivingArea', 'DaysOnMarket']
 listing_distribution_summary = listing_df[target_fields].describe().T
 listing_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
 print(f"Listings dataset distribution summary: \n{listing_distribution_summary.round(2)}")
+print(f"The average closed price is {listing_distribution_summary.round(2)['mean'][0]} and the median closed price is {listing_distribution_summary.round(2)['median'][0]}")
 sold_distribution_summary = sold_df[target_fields].describe().T
 sold_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
 print(f"Sold dataset distribution summary: \n{sold_distribution_summary.round(2)}")
+print(f"The average closed price is {sold_distribution_summary.round(2)['mean'][0]} and the median closed price is {sold_distribution_summary.round(2)['median'][0]}")
 # extreme outliers are most likely not wrong but could be from mansions or expensive areas so, 
 # we can keep them for now and maybe remove from analysis later so its not skewed since those properties are more rare,
 # the extremely low outliers are most likely wrong though since houses cannot be sold for 0 dollars so those will need to be filtered out
@@ -68,3 +70,7 @@ print(f"Sold dataset distribution summary: \n{sold_distribution_summary.round(2)
 missing_val_analysis(listing_df, 'Listings Dataset', 50)
 missing_val_analysis(sold_df, "Sold Dataset", 50)
 # can drop all of these columns I think, lots of null and they are not key to analysis most likely
+
+print(f"{round(sum(sold_df['ClosePrice'] > sold_df['ListPrice'])/len(sold_df)*100, 3)}% of houses closed at a higher price than they were listed at.")
+
+print(f"The counties with the highest median close price are: \n{sold_df.groupby('CountyOrParish')['ClosePrice'].median().sort_values(ascending=False).head(10)}")
