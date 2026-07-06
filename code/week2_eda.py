@@ -58,6 +58,7 @@ listing_distribution_summary = listing_df[target_fields].describe().T
 listing_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
 print(f"Listings dataset distribution summary: \n{listing_distribution_summary.round(2)}")
 print(f"The average closed price is {listing_distribution_summary.round(2)['mean'][0]} and the median closed price is {listing_distribution_summary.round(2)['median'][0]}")
+
 sold_distribution_summary = sold_df[target_fields].describe().T
 sold_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
 print(f"Sold dataset distribution summary: \n{sold_distribution_summary.round(2)}")
