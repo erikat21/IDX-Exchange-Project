@@ -103,14 +103,14 @@ print(f"\nSold dataset has {sold_df['listing_after_close_flag'].sum()} rows with
 sold_df['purchase_after_close_flag'] = sold_df['CloseDate'] < sold_df['PurchaseContractDate']
 print(f"Sold dataset has {sold_df['purchase_after_close_flag'].sum()} rows with purchase dates after the close date")
 sold_df['negative_timeline_flag'] = sold_df['PurchaseContractDate'] < sold_df['ListingContractDate']
-print(f"Sold dataset has {sold_df['listing_after_close_flag'].sum()} rows with listing dates after the purchase date \n")
+print(f"Sold dataset has {sold_df['negative_timeline_flag'].sum()} rows with listing dates after the purchase date \n")
 
 listing_df['listing_after_close_flag'] = listing_df['CloseDate'] < listing_df['ListingContractDate']
 print(f"Listings dataset has {listing_df['listing_after_close_flag'].sum()} rows with listing dates after the close date")
 listing_df['purchase_after_close_flag'] = listing_df['CloseDate'] < listing_df['PurchaseContractDate']
 print(f"Listings dataset has {listing_df['purchase_after_close_flag'].sum()} rows with purchase dates after the close date")
 listing_df['negative_timeline_flag'] = listing_df['PurchaseContractDate'] < listing_df['ListingContractDate']
-print(f"Listing dataset has {listing_df['listing_after_close_flag'].sum()} rows with listing dates after the purchase date\n")
+print(f"Listing dataset has {listing_df['negative_timeline_flag'].sum()} rows with listing dates after the purchase date\n")
 
 # Flag closing prices way above listing prices
 sold_df['ClosePriceMuchHigherThanListing'] = sold_df['ClosePrice'] > sold_df['ListPrice']*2
@@ -138,3 +138,7 @@ print(f"Listings dataset has {listing_df['positive_longitude_flag'].sum()} rows 
 listing_df['out_of_state_coordinates_flag'] = ((listing_df['Latitude'] < 32) | (listing_df['Latitude'] > 42) |
                                             (listing_df['Longitude'] < -125) | (listing_df['Longitude'] > -114))
 print(f"Listings dataset has {listing_df['out_of_state_coordinates_flag'].sum()} with out of state coordinates")
+
+# write cleaned datasets to output csv's
+sold_df.to_csv('output/sold.csv', index=False)
+listing_df.to_csv('output/listing.csv', index=False)
