@@ -141,3 +141,7 @@ new_metrics = [
 ]
 print(sold_df[new_metrics].head(10).to_string(index=False))
 print(listing_df[new_metrics].head(10).to_string(index=False))
+
+# write feature engineered datasets to output csv's
+sold_df.to_csv('output/sold.csv', index=False)
+listing_df.to_csv('output/listing.csv', index=False)
