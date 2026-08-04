@@ -61,7 +61,7 @@ for col, rule in validation_rules.items():
 print(invalid_summary)
 # drop rows with invalid information except for lotsize columns those had a lot of invalid rows(thousands)
 
-cutoff_date = pd.Timestamp('2026-05-31')
+cutoff_date = pd.Timestamp('2026-08-01')
 future_closes = sold_df[sold_df['CloseDate'] > cutoff_date]
 print(len(future_closes))
 # no close dates in the future
@@ -83,10 +83,10 @@ for col, rule in validation_rules.items():
         invalid_summary[col] = rule(listing_df[col]).sum()
 print(invalid_summary)
 
-cutoff_date = pd.Timestamp('2026-05-31')
+cutoff_date = pd.Timestamp('2026-08-01')
 future_closes = listing_df[listing_df['CloseDate'] > cutoff_date]
 print(len(future_closes))
-# 726 close dates in the future
+# 1623 close dates in the future
 
 # drop invalid rows and check row counts
 invalid_mask = pd.Series(False, index = listing_df.index)
@@ -100,44 +100,71 @@ print(len(listing_df))
 # Check date consistency 
 sold_df['listing_after_close_flag'] = sold_df['CloseDate'] < sold_df['ListingContractDate']
 print(f"\nSold dataset has {sold_df['listing_after_close_flag'].sum()} rows with listing dates after the close date")
+# Sold dataset has 70 rows with listing dates after the close date
+
 sold_df['purchase_after_close_flag'] = sold_df['CloseDate'] < sold_df['PurchaseContractDate']
 print(f"Sold dataset has {sold_df['purchase_after_close_flag'].sum()} rows with purchase dates after the close date")
+# Sold dataset has 239 rows with purchase dates after the close date
+
 sold_df['negative_timeline_flag'] = sold_df['PurchaseContractDate'] < sold_df['ListingContractDate']
 print(f"Sold dataset has {sold_df['negative_timeline_flag'].sum()} rows with listing dates after the purchase date \n")
+# Sold dataset has 297 rows with listing dates after the purchase date 
 
 listing_df['listing_after_close_flag'] = listing_df['CloseDate'] < listing_df['ListingContractDate']
 print(f"Listings dataset has {listing_df['listing_after_close_flag'].sum()} rows with listing dates after the close date")
+# Listings dataset has 83 rows with listing dates after the close date
+
 listing_df['purchase_after_close_flag'] = listing_df['CloseDate'] < listing_df['PurchaseContractDate']
 print(f"Listings dataset has {listing_df['purchase_after_close_flag'].sum()} rows with purchase dates after the close date")
+# Listings dataset has 261 rows with purchase dates after the close date
+
 listing_df['negative_timeline_flag'] = listing_df['PurchaseContractDate'] < listing_df['ListingContractDate']
 print(f"Listing dataset has {listing_df['negative_timeline_flag'].sum()} rows with listing dates after the purchase date\n")
+# Listing dataset has 299 rows with listing dates after the purchase date
 
 # Flag closing prices way above listing prices
 sold_df['ClosePriceMuchHigherThanListing'] = sold_df['ClosePrice'] > sold_df['ListPrice']*2
 print(f"Sold Dataset has {sold_df['ClosePriceMuchHigherThanListing'].sum()} rows with a closing price double the listing price")
+# Sold Dataset has 161 rows with a closing price double the listing price
+
 listing_df['ClosePriceMuchHigherThanListing'] = listing_df['ClosePrice'] > listing_df['ListPrice']*2
 print(f"Listings Dataset has {listing_df['ClosePriceMuchHigherThanListing'].sum()} rows with a closing price double the listing price\n")
+# Listings Dataset has 38 rows with a closing price double the listing price
 
 # Check longitude/latitude consistency
 sold_df['missing_coordinates_flag'] = (sold_df['Latitude'].isna() |sold_df['Longitude'].isna())
 print(f"Sold Dataset has {sold_df['missing_coordinates_flag'].sum()} rows with either missing latitude or longitude or both") 
+# Sold Dataset has 13602 rows with either missing latitude or longitude or both
+
 sold_df['zero_coordinates_flag'] = ((sold_df['Latitude'] == 0) |(sold_df['Longitude'] == 0))
 print(f"Sold dataset has {sold_df['zero_coordinates_flag'].sum()} rows with zero values for latitude or longitude or both")
+# Sold dataset has 34 rows with zero values for latitude or longitude or both
+
 sold_df['positive_longitude_flag'] = (sold_df['Longitude'] > 0)
 print(f"Sold dataset has {sold_df['positive_longitude_flag'].sum()} rows with positive longitudes, california should be negative")
+# Sold dataset has 33 rows with positive longitudes, california should be negative
+
 sold_df['out_of_state_coordinates_flag'] = ((sold_df['Latitude'] < 32) | (sold_df['Latitude'] > 42) |
                                             (sold_df['Longitude'] < -125) | (sold_df['Longitude'] > -114))
 print(f"Sold dataset has {sold_df['out_of_state_coordinates_flag'].sum()} with out of state coordinates\n")
+# Sold dataset has 97 with out of state coordinates
 
 listing_df['missing_coordinates_flag'] = (listing_df['Latitude'].isna() |listing_df['Longitude'].isna())
 print(f"Listing Dataset has {listing_df['missing_coordinates_flag'].sum()} rows with either missing latitude or longitude or both") 
+# Listing Dataset has 80892 rows with either missing latitude or longitude or both
+
 listing_df['zero_coordinates_flag'] = ((listing_df['Latitude'] == 0) |(listing_df['Longitude'] == 0))
 print(f"Listings dataset has {listing_df['zero_coordinates_flag'].sum()} rows with zero values for latitude or longitude or both")
+# Listings dataset has 77 rows with zero values for latitude or longitude or both
+
 listing_df['positive_longitude_flag'] = (listing_df['Longitude'] > 0)
 print(f"Listings dataset has {listing_df['positive_longitude_flag'].sum()} rows with positive longitudes, california should be negative")
+# Listings dataset has 90 rows with positive longitudes, california should be negative
+
 listing_df['out_of_state_coordinates_flag'] = ((listing_df['Latitude'] < 32) | (listing_df['Latitude'] > 42) |
                                             (listing_df['Longitude'] < -125) | (listing_df['Longitude'] > -114))
 print(f"Listings dataset has {listing_df['out_of_state_coordinates_flag'].sum()} with out of state coordinates")
+# Listings dataset has 323 with out of state coordinates
 
 # write cleaned datasets to output csv's
 sold_df.to_csv('output/sold.csv', index=False)

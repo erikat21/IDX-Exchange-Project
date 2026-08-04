@@ -20,10 +20,12 @@ for file in all_listing_files:
 combined_listings = pd.concat(listing_chunks, ignore_index=True)
 total_row_count_after_concat = len(combined_listings)
 print(f"Row count before concatenation: {total_row_count_before_concat}, Row count after concatenation: {total_row_count_after_concat}")
+# Row count before concatenation: 975985, Row count after concatenation: 975985
 
 filtered_listings = combined_listings[combined_listings['PropertyType'] == 'Residential']
 
 print(f"Row count after filtering: {len(filtered_listings)}")
+# Row count after filtering: 621762
 
 filtered_listings.to_csv('output/listing.csv', index=False)
 
@@ -47,10 +49,12 @@ for file in all_sold_files:
 combined_sold = pd.concat(sold_chunks, ignore_index=True)
 total_row_count_after_concat = len(combined_sold)
 print(f"Row count before concatenation: {total_row_count_before_concat}, Row count after concatenation: {total_row_count_after_concat}")
+#Row count before concatenation: 685634, Row count after concatenation: 685634
 
 filtered_sold = combined_sold[combined_sold['PropertyType'] == 'Residential']
 
 print(f"Row count after filtering: {len(filtered_sold)}")
+# Row count after filtering: 460978
 
 filtered_sold.to_csv('output/sold.csv', index=False)
 

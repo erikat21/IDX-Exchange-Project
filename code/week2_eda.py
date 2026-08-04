@@ -19,14 +19,21 @@ if __name__ == "__main__":
 
     # check number of rows and columns for the listings and sold datasets
     print(f"The listings dataset has {listing_df.shape[0]} rows, and {listing_df.shape[1]} columns.")
+    # The listings dataset has 621762 rows, and 84 columns.
     print(f"The sold dataset has {sold_df.shape[0]} rows, and {sold_df.shape[1]} columns.")
+    # The sold dataset has 460978 rows, and 82 columns.
 
     # making sure the property type filtering worked properly
     print(f"Unique property types in the listings dataset: {listing_df['PropertyType'].unique()}")
+    # Unique property types in the listings dataset: ['Residential']
     print(f"Unique property types in the sold dataset: {sold_df['PropertyType'].unique()}")
+    # Unique property types in the sold dataset: ['Residential']
 
     high_missing_listings = missing_val_analysis(listing_df, 'Listings Dataset', 90)
+    # Listings Dataset has 15 columns that are more than 90% null.
+
     high_missing_sold = missing_val_analysis(sold_df, "Sold Dataset", 90)
+    # Sold Dataset has 15 columns that are more than 90% null.
     # consider dropping columns with more than 50% missing values unless they are core fields or seem like they could be important
 
     key_fields = ['ClosePrice', "ListPrice", "OriginalListPrice", "LivingArea", "LotSizeAcres", "BedroomsTotal", "BathroomsTotalInteger", "DaysOnMarket", "YearBuilt"]
@@ -59,20 +66,25 @@ if __name__ == "__main__":
     listing_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
     print(f"Listings dataset distribution summary: \n{listing_distribution_summary.round(2)}")
     print(f"The average closed price is {listing_distribution_summary.round(2)['mean'][0]} and the median closed price is {listing_distribution_summary.round(2)['median'][0]}")
+    # The average closed price is 1207110.13 and the median closed price is 855000.0
 
     sold_distribution_summary = sold_df[target_fields].describe().T
     sold_distribution_summary.rename(columns={'50%': 'median'}, inplace= True)
     print(f"Sold dataset distribution summary: \n{sold_distribution_summary.round(2)}")
     print(f"The average closed price is {sold_distribution_summary.round(2)['mean'][0]} and the median closed price is {sold_distribution_summary.round(2)['median'][0]}")
+    # The average closed price is 1189960.63 and the median closed price is 822461.5
     # extreme outliers are most likely not wrong but could be from mansions or expensive areas so, 
     # we can keep them for now and maybe remove from analysis later so its not skewed since those properties are more rare,
     # the extremely low outliers are most likely wrong though since houses cannot be sold for 0 dollars so those will need to be filtered out
 
 
     missing_val_analysis(listing_df, 'Listings Dataset', 50)
+    # Listings Dataset has 33 columns that are more than 50% null.
     missing_val_analysis(sold_df, "Sold Dataset", 50)
+    # Sold Dataset has 27 columns that are more than 50% null.
     # can drop all of these columns I think, lots of null and they are not key to analysis most likely
 
     print(f"{round(sum(sold_df['ClosePrice'] > sold_df['ListPrice'])/len(sold_df)*100, 3)}% of houses closed at a higher price than they were listed at.")
+    # 39.78% of houses closed at a higher price than they were listed at.
 
     print(f"The counties with the highest median close price are: \n{sold_df.groupby('CountyOrParish')['ClosePrice'].median().sort_values(ascending=False).head(10)}")
